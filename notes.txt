@@ -1,0 +1,28 @@
+in odin prefix and postfix operators are not supported 
+raw string literals in odin ??
+\v = vertical tab ??? 
+A leading zero does not produce an octal constant (unlike C).
+constant values must be evaluated at run time
+Odin programs consist of packages. A package is a directory of Odin code files, all of which have the same package declaration at the top. Execution starts in the package’s main procedure.
+The core: prefix is used to state where the import is meant to look; this is called a library collection. If no prefix is present, the import will look relative to the current file. import "core:fmt"
+All declarations are public by default if you want to make something private you have to add @(private) tag over it 
+@(private) = cannot be accessed outside the package 
+@(private="file") cannot be accessed outside the file 
+A package is a directory of Odin code files, all of which have the same package declaration at the top, e.g. package main. Each .odin file must have the same package name. A directory cannot contain more than 1 package.
+packages can be nested like core:img/png 
+there is only one type of loop in Odin that is the "for" loop
+for - do ?? 
+there is no stack based "map" all maps are stored on the heap in Odin
+fallthrough keyword ?? 
+If all the case values are constants in the switch cases , the compiler may optimize the switch statement into a jump table (like C).
+A switch statement without a condition is the same as switch true. This can be used to write a clean and long if-else chain and have the ability to break if needed
+It’s important to note that defer cannot be used to change a procedure’s named return values, as it runs after exit when the values have already been returned.
+The defer construct in Odin differs from Go’s defer, which is function-exit and relies on a closure stack system.
+when is same as if but runs in compile time
+The when statement is very useful for writing platform specific code. This is akin to the #if construct in C’s preprocessor. However, in Odin, it is type checked
+
+if - else if - else -> when - else when - else 
+
+block labels ; fallthourgh ??? 
+
+
