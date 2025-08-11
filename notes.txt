@@ -23,6 +23,36 @@ The when statement is very useful for writing platform specific code. This is ak
 
 if - else if - else -> when - else when - else 
 
-block labels ; fallthourgh ??? 
+Continuing the C family tradition, everything in Odin is passed by value (rather than by reference, e.g. FORTRAN, Java, etc). However, Odin differs from the C/C++ tradition in that all procedure parameters in Odin are immutable values.
 
+explicit procedure overloading ??
 
+The zero value is:
+(1)0 for numeric and rune types
+(2)false for boolean types
+(3)"" (the empty string) for strings
+(4)nil for pointer, typeid, and any types.
+
+bitcast ??? transmute() ???
+
+In the Odin type system, certain expressions will have an “untyped” type. An untyped type can implicitly convert to a “typed” type. All constants are untyped 
+
+built in constants are true , false , nil , --- (undefined)
+Note: --- is not a contract in that all memory is uninitialized, but that it may be. For example, as a side-effect of an implementation detail, padding in a struct must be zeroed to permit trivial bitwise memory comparison.
+
+There are two kinds of built-in procedures in Odin:
+(1)Compiler defined
+(2)Core library defined
+
+string = odin string type is just a rawptr + len
+cstring = C style string with null termination
+
+Iteration through runes is preferred since odin strings are UTF8. Most core library procedures will be addressed by *_byte if they do input/output an index in byte.
+
+%% in Odin ?? 
+
+For an operand x of type T, the address operation &x generates a pointer of ^T to x. 
+x<<1 is the same as x*2 and x>>1 is the same as x/2
+Overflow does not cause a runtime panic. A compiler may not optimize code under the assumption that overflow does not occur. For instance, x < x+1 may not be assumed to be always true.
+
+The result of a floating-point related division by zero is not specified beyond the IEEE-754 standard; a runtime panicwill occur.

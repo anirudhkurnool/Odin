@@ -4,7 +4,7 @@ package main
 import "core:fmt"
 import o "core:os" //o is a alias for os
 
-PI :: 3.14 //constant
+PI :: 3.14 //constant //untyped
 
 @(private) //cannot be accessed outside the package 
 TEST_CONSTANT :: 1234
@@ -19,6 +19,9 @@ main :: proc() {
 	fmt.println(mul(2, 5))
 	fmt.println(div(3, 5))
 	//fmt.println(div(1, 0))
+
+	uninitialized_num: int = ---
+	fmt.println(uninitialized_num) //garbage value
 
 	//basic for loop in odin
 	//odin doesn't have while, do-while loops 
@@ -252,7 +255,7 @@ main :: proc() {
 	}
 
 
-	varOfTypeEnum := Foo.A
+	varOfTypeEnum := Foo.D
 	switch varOfTypeEnum {
 	case .A:
 		fmt.println("A")
@@ -262,6 +265,9 @@ main :: proc() {
 		fmt.println("C")
 	case .D:
 		fmt.println("D")
+		fallthrough
+	case:
+		fmt.println("default case")
 	}
 
 	#partial switch varOfTypeEnum {
@@ -299,6 +305,65 @@ main :: proc() {
 			fmt.printfln("%d X %d = %d", i, j, i * j)
 		}
 	}
+
+	shadow_to_mutate(2)
+	fmt.println(variable_args_sum(1, 2, 3))
+	num4 := 4
+	num5 := 5
+	fmt.printfln("num1 = %d ; num2 = %d", num4, num5)
+	swap(&num4, &num5)
+	fmt.printfln("num1 = %d ; num2 = %d", num4, num5)
+
+	fmt.println("named return add = ", named_return_add(2, 3))
+
+	fmt.println("named return add = ", named_return_add(0, 0))
+
+	fmt.println("default add = ", add_with_default_values())
+
+	f1 := Foo1.A1
+	v2 := true
+	fmt.println(to_string(v2))
+	fmt.println(to_string(f1))
+
+	//string iteration by rune 
+	str2: string = "Hello Galaxy"
+	for rn, index in str2 {
+		fmt.println(index, rn)
+	}
+
+
+	//byte wise iteration of string 
+	for i in 0 ..< len(str2) {
+		fmt.println(i, str2[i]) //prints index and raw rune in i32 
+	}
+
+	v := Vec2d {
+		x = 3.14,
+		y = 6.28,
+	}
+
+	fmt.println(v)
+
+	str4: cstring = "Hello" //both range and index for loops don't work on cstring ???
+
+	num2 := 3
+	fmt.println(num2)
+	fmt.println(&num2) // address of num2
+	p_num2: ^int = &num2 //pointer to num2 
+	fmt.println(p_num2)
+	fmt.println(p_num2^) //derefernce a pointer 
+	fmt.println(&p_num2)
+
+	num6 := 4 if num2 == 3 else 5 //ternary operator
+	fmt.println(num6)
+	num7 := num2 == 3 ? 4 : 5 // cond ? if_cond_true : else 
+	fmt.println(num7)
+
+	one_arr := [?]int {
+		0 ..= 10 = 1,
+	} //array of 11 elements with all 1s
+	fmt.println(one_arr)
+
 }
 
 
@@ -344,7 +409,7 @@ sqrt :: proc(num: int) -> f64 {
 }
 
 is_prime :: proc(num: int) -> bool {
-	maxNumCheck := int(sqrt(num))
+	maxNumCheck := int(sqrt(num)) //type casting 
 	for i in 0 ..= maxNumCheck {
 		if num % i == 0 {
 			return false
@@ -352,4 +417,75 @@ is_prime :: proc(num: int) -> bool {
 	}
 
 	return true
+}
+
+shadow_to_mutate :: proc(num: int) {
+	//args are immutable by default 
+	num := num
+	num += 1
+	fmt.println("num  = ", num)
+}
+
+variable_args_sum :: proc(nums: ..int) -> int {
+	res := 0
+	for i in nums {
+		res += i
+	}
+	return res
+}
+
+swap :: proc(num1: ^int, num2: ^int) {
+	num1^, num2^ = num2^, num1^
+}
+
+named_return_add :: proc(a, b: int) -> (c: int = -1) { 	//named return with default value 
+	if a == 0 && b == 0 {
+		return
+	}
+	c = a + b
+	return //named return without default value
+}
+
+add_with_default_values :: proc(a: int = 1, b: int = 2) -> int {
+	return a + b
+}
+
+bool_to_string :: proc(bool_var: bool) -> string {
+	if bool_var == true {
+		return "true"
+	} else {
+		return "false"
+	}
+}
+
+Foo1 :: enum {
+	A1,
+	B1,
+	C1,
+	D1,
+}
+
+foo1_to_string :: proc(foo_var: Foo1) -> string {
+	switch foo_var {
+	case .A1:
+		return "A1"
+	case .B1:
+		return "B1"
+	case .C1:
+		return "C1"
+	case .D1:
+		return "D1"
+	case:
+		return "unknown"
+	}
+}
+
+to_string :: proc {
+	bool_to_string,
+	foo1_to_string,
+}
+
+Vec2d :: struct {
+	x: f64,
+	y: f64,
 }
